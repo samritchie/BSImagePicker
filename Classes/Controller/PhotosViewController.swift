@@ -131,23 +131,21 @@ final class PhotosViewController : UICollectionViewController, UIPopoverPresenta
     
     // MARK: Button actions
     func cancelButtonPressed(sender: UIBarButtonItem) {
+        navigationController?.delegate = nil
         if let closure = cancelClosure, let assets = photosDataSource?.data.selections as? [PHAsset] {
-            dispatch_async(dispatch_get_global_queue(0, 0), { () -> Void in
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
                 closure(assets: assets)
             })
         }
-        
-        dismissViewControllerAnimated(true, completion: nil)
     }
     
     func doneButtonPressed(sender: UIBarButtonItem) {
+        navigationController?.delegate = nil
         if let closure = finishClosure, let assets = photosDataSource?.data.selections as? [PHAsset] {
-            dispatch_async(dispatch_get_global_queue(0, 0), { () -> Void in
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
                 closure(assets: assets)
             })
         }
-        
-        dismissViewControllerAnimated(true, completion: nil)
     }
     
     func albumButtonPressed(sender: UIButton) {

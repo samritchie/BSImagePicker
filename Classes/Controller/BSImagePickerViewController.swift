@@ -27,7 +27,7 @@ import Photos
 BSImagePickerViewController.
 Use settings or buttons to customize it to your needs.
 */
-public final class BSImagePickerViewController : UINavigationController, BSImagePickerSettings {
+public final class BSImagePickerViewController : UIViewController, BSImagePickerSettings {
     private let settings = Settings()
     
     private var doneBarButton: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: nil, action: nil)
@@ -36,8 +36,11 @@ public final class BSImagePickerViewController : UINavigationController, BSImage
     private var dataSource: SelectableDataSource?
     private let selections: [PHAsset]
     
-    static let bundle: NSBundle = NSBundle(path: NSBundle(forClass: PhotosViewController.self).pathForResource("BSImagePicker", ofType: "bundle")!)!
+    static let bundle: NSBundle = NSBundle(forClass: PhotosViewController.self)
     
+    @IBInspectable var doneSegueName: String?
+    @IBInspectable var cancelSegueName: String?
+
     lazy var photosViewController: PhotosViewController = {
         let dataSource: SelectableDataSource
         if self.dataSource != nil {
@@ -52,6 +55,22 @@ public final class BSImagePickerViewController : UINavigationController, BSImage
         vc.cancelBarButton = self.cancelBarButton
         vc.albumTitleView = self.albumTitleView
         
+        vc.cancelClosure = { assets in
+            if let seg = self.cancelSegueName {
+                self.performSegueWithIdentifier(seg, sender: self)
+            } else {
+                self.dismissViewControllerAnimated(true, completion: nil)
+            }
+        }
+        
+        vc.finishClosure = { assets in
+            if let seg = self.doneSegueName {
+                self.performSegueWithIdentifier(seg, sender: self)
+            } else {
+                self.dismissViewControllerAnimated(true, completion: nil)
+            }
+        }
+
         return vc
     }()
     
@@ -151,7 +170,7 @@ public final class BSImagePickerViewController : UINavigationController, BSImage
         
         // Make sure we really are authorized
         if PHPhotoLibrary.authorizationStatus() == .Authorized {
-            setViewControllers([photosViewController], animated: false)
+            navigationController?.pushViewController(photosViewController, animated: false)
         }
     }
     
