@@ -19,7 +19,6 @@
 		220A4A9E1BB1070F004D1FDA /* PreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220A4A781BB1070F004D1FDA /* PreviewViewController.swift */; settings = {ASSET_TAGS = (); }; };
 		220A4A9F1BB1070F004D1FDA /* ZoomAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220A4A791BB1070F004D1FDA /* ZoomAnimator.swift */; settings = {ASSET_TAGS = (); }; };
 		220A4AA01BB1070F004D1FDA /* UIButton+NoAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220A4A7B1BB1070F004D1FDA /* UIButton+NoAnimation.swift */; settings = {ASSET_TAGS = (); }; };
-		220A4AA11BB1070F004D1FDA /* UIViewController+BSImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220A4A7C1BB1070F004D1FDA /* UIViewController+BSImagePicker.swift */; settings = {ASSET_TAGS = (); }; };
 		220A4AA21BB1070F004D1FDA /* AlbumCellFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220A4A7E1BB1070F004D1FDA /* AlbumCellFactory.swift */; settings = {ASSET_TAGS = (); }; };
 		220A4AA31BB1070F004D1FDA /* PhotoCellFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220A4A7F1BB1070F004D1FDA /* PhotoCellFactory.swift */; settings = {ASSET_TAGS = (); }; };
 		220A4AA41BB1070F004D1FDA /* AssetCollectionDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220A4A811BB1070F004D1FDA /* AssetCollectionDataSource.swift */; settings = {ASSET_TAGS = (); }; };
@@ -55,7 +54,6 @@
 		220A4A781BB1070F004D1FDA /* PreviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewViewController.swift; sourceTree = "<group>"; };
 		220A4A791BB1070F004D1FDA /* ZoomAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZoomAnimator.swift; sourceTree = "<group>"; };
 		220A4A7B1BB1070F004D1FDA /* UIButton+NoAnimation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIButton+NoAnimation.swift"; sourceTree = "<group>"; };
-		220A4A7C1BB1070F004D1FDA /* UIViewController+BSImagePicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+BSImagePicker.swift"; sourceTree = "<group>"; };
 		220A4A7E1BB1070F004D1FDA /* AlbumCellFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbumCellFactory.swift; sourceTree = "<group>"; };
 		220A4A7F1BB1070F004D1FDA /* PhotoCellFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoCellFactory.swift; sourceTree = "<group>"; };
 		220A4A811BB1070F004D1FDA /* AssetCollectionDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetCollectionDataSource.swift; sourceTree = "<group>"; };
@@ -150,7 +148,6 @@
 			isa = PBXGroup;
 			children = (
 				220A4A7B1BB1070F004D1FDA /* UIButton+NoAnimation.swift */,
-				220A4A7C1BB1070F004D1FDA /* UIViewController+BSImagePicker.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -327,7 +324,6 @@
 				220A4AA41BB1070F004D1FDA /* AssetCollectionDataSource.swift in Sources */,
 				220A4AAB1BB1070F004D1FDA /* SelectableDataDelegate.swift in Sources */,
 				220A4AB31BB1070F004D1FDA /* UIImageViewModeScaleAspect.m in Sources */,
-				220A4AA11BB1070F004D1FDA /* UIViewController+BSImagePicker.swift in Sources */,
 				220A4AA01BB1070F004D1FDA /* UIButton+NoAnimation.swift in Sources */,
 				220A4A9F1BB1070F004D1FDA /* ZoomAnimator.swift in Sources */,
 				220A4AA81BB1070F004D1FDA /* TableViewDataSource.swift in Sources */,
@@ -438,6 +434,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = "$(SRCROOT)/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = au.com.codesplice.BSImagePicker;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -454,6 +451,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = "$(SRCROOT)/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = au.com.codesplice.BSImagePicker;
 				PRODUCT_NAME = "$(TARGET_NAME)";

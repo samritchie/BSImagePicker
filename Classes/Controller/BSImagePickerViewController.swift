@@ -27,7 +27,7 @@ import Photos
 BSImagePickerViewController.
 Use settings or buttons to customize it to your needs.
 */
-public final class BSImagePickerViewController : UIViewController, BSImagePickerSettings {
+public class BSImagePickerViewController : UIViewController, BSImagePickerSettings {
     private let settings = Settings()
     
     private var doneBarButton: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: nil, action: nil)
@@ -38,9 +38,6 @@ public final class BSImagePickerViewController : UIViewController, BSImagePicker
     
     static let bundle: NSBundle = NSBundle(forClass: PhotosViewController.self)
     
-    @IBInspectable var doneSegueName: String?
-    @IBInspectable var cancelSegueName: String?
-
     lazy var photosViewController: PhotosViewController = {
         let dataSource: SelectableDataSource
         if self.dataSource != nil {
@@ -55,30 +52,22 @@ public final class BSImagePickerViewController : UIViewController, BSImagePicker
         vc.cancelBarButton = self.cancelBarButton
         vc.albumTitleView = self.albumTitleView
         
-        vc.cancelClosure = { assets in
-            if let seg = self.cancelSegueName {
-                self.performSegueWithIdentifier(seg, sender: self)
-            } else {
-                self.dismissViewControllerAnimated(true, completion: nil)
-            }
+        vc.cancelClosure = { _ in
+            self.imagePickerDidCancel()
         }
         
         vc.finishClosure = { assets in
-            if let seg = self.doneSegueName {
-                self.performSegueWithIdentifier(seg, sender: self)
-            } else {
-                self.dismissViewControllerAnimated(true, completion: nil)
-            }
+            self.imagePickerDidComplete(assets)
         }
 
         return vc
     }()
     
-    class func authorize(status: PHAuthorizationStatus = PHPhotoLibrary.authorizationStatus(), fromViewController: UIViewController, completion: () -> Void) {
+    public class func authorize(status: PHAuthorizationStatus = PHPhotoLibrary.authorizationStatus(), fromViewController: UIViewController, completion: Bool -> Void) {
         switch status {
         case .Authorized:
             // We are authorized. Run block
-            completion()
+            completion(true)
         case .NotDetermined:
             // Ask user for permission
             PHPhotoLibrary.requestAuthorization({ (status) -> Void in
@@ -94,9 +83,10 @@ public final class BSImagePickerViewController : UIViewController, BSImagePicker
                     message: NSLocalizedString("imagePickerNoCameraAccessMessage", value: "You need to enable Photos access in application settings.", comment: "Alert view message"),
                     preferredStyle: .Alert)
                 
-                let cancelAction = UIAlertAction(title: NSLocalizedString("imagePickerNoCameraAccessCancelButton", value: "Cancel", comment: "Cancel button title"), style: .Cancel, handler:nil)
-                
+                let cancelAction = UIAlertAction(title: NSLocalizedString("imagePickerNoCameraAccessCancelButton", value: "Cancel", comment: "Cancel button title"), style: .Cancel) { _ in completion(false) }
+
                 let settingsAction = UIAlertAction(title: NSLocalizedString("imagePickerNoCameraAccessSettingsButton", value: "Settings", comment: "Settings button title"), style: .Default, handler: { (action) -> Void in
+                    completion(false)
                     let url = NSURL(string: UIApplicationOpenSettingsURLString)
                     if let url = url where UIApplication.sharedApplication().canOpenURL(url) {
                         UIApplication.sharedApplication().openURL(url)
@@ -168,7 +158,6 @@ public final class BSImagePickerViewController : UIViewController, BSImagePicker
         // TODO: Settings
         view.backgroundColor = UIColor.whiteColor()
         
-        // Make sure we really are authorized
         if PHPhotoLibrary.authorizationStatus() == .Authorized {
             navigationController?.pushViewController(photosViewController, animated: false)
         }
@@ -299,37 +288,13 @@ public final class BSImagePickerViewController : UIViewController, BSImagePicker
         }
     }
     
-    // MARK: Closures
-    var selectionClosure: ((asset: PHAsset) -> Void)? {
-        get {
-            return photosViewController.selectionClosure
-        }
-        set {
-            photosViewController.selectionClosure = newValue
-        }
+    // MARK: event methods for override
+    
+    public func imagePickerDidCancel() {
+        
     }
-    var deselectionClosure: ((asset: PHAsset) -> Void)? {
-        get {
-            return photosViewController.deselectionClosure
-        }
-        set {
-            photosViewController.deselectionClosure = newValue
-        }
-    }
-    var cancelClosure: ((assets: [PHAsset]) -> Void)? {
-        get {
-            return photosViewController.cancelClosure
-        }
-        set {
-            photosViewController.cancelClosure = newValue
-        }
-    }
-    var finishClosure: ((assets: [PHAsset]) -> Void)? {
-        get {
-            return photosViewController.finishClosure
-        }
-        set {
-            photosViewController.finishClosure = newValue
-        }
+    
+    public func imagePickerDidComplete(assets: [PHAsset]) {
+        
     }
 }
