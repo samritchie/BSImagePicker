@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="8191" systemVersion="15A279b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
@@ -7,22 +7,64 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="UICollectionViewCell">
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="CameraButtonCell" customModule="BSImagePicker" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <button opaque="NO" contentMode="center" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sVb-gS-aqV">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XO9-Xm-gh4">
                     <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
-                    <state key="normal" title="Button" image="camera.png"/>
-                </button>
+                    <subviews>
+                        <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sVb-gS-aqV">
+                            <rect key="frame" x="6.5" y="6.5" width="87" height="87"/>
+                            <animations/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="87" id="f6P-rh-lcC"/>
+                                <constraint firstAttribute="height" constant="87" id="gWe-jY-gRH"/>
+                            </constraints>
+                            <state key="normal" title="Button" image="camera.png"/>
+                        </button>
+                    </subviews>
+                    <animations/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstItem="sVb-gS-aqV" firstAttribute="top" secondItem="XO9-Xm-gh4" secondAttribute="top" id="A21-iu-BIP"/>
+                        <constraint firstAttribute="bottom" secondItem="sVb-gS-aqV" secondAttribute="bottom" id="Kgv-ad-bbk"/>
+                        <constraint firstItem="sVb-gS-aqV" firstAttribute="centerX" secondItem="XO9-Xm-gh4" secondAttribute="centerX" id="MfX-vj-HT1"/>
+                        <constraint firstItem="sVb-gS-aqV" firstAttribute="centerY" secondItem="XO9-Xm-gh4" secondAttribute="centerY" id="Msx-TT-IAh"/>
+                        <constraint firstItem="sVb-gS-aqV" firstAttribute="leading" secondItem="XO9-Xm-gh4" secondAttribute="leading" id="SLx-n4-ZUS"/>
+                        <constraint firstItem="sVb-gS-aqV" firstAttribute="centerX" secondItem="XO9-Xm-gh4" secondAttribute="centerX" id="gXP-uq-XnL"/>
+                        <constraint firstItem="sVb-gS-aqV" firstAttribute="centerY" secondItem="XO9-Xm-gh4" secondAttribute="centerY" id="sQ4-bk-3Uf"/>
+                        <constraint firstAttribute="trailing" secondItem="sVb-gS-aqV" secondAttribute="trailing" id="tr3-wy-GUb"/>
+                    </constraints>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="A21-iu-BIP"/>
+                            <exclude reference="Kgv-ad-bbk"/>
+                            <exclude reference="MfX-vj-HT1"/>
+                            <exclude reference="SLx-n4-ZUS"/>
+                            <exclude reference="sQ4-bk-3Uf"/>
+                            <exclude reference="tr3-wy-GUb"/>
+                        </mask>
+                    </variation>
+                </view>
             </subviews>
+            <animations/>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="XO9-Xm-gh4" secondAttribute="trailing" id="3uS-kK-l0X"/>
+                <constraint firstItem="XO9-Xm-gh4" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="4Lj-S7-1lm"/>
+                <constraint firstItem="XO9-Xm-gh4" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="4r7-So-1CU"/>
+                <constraint firstAttribute="bottom" secondItem="XO9-Xm-gh4" secondAttribute="bottom" id="lsb-Ug-as7"/>
+            </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="cameraButton" destination="sVb-gS-aqV" id="aGK-Wj-Iza"/>
+            </connections>
             <point key="canvasLocation" x="967" y="412"/>
         </view>
     </objects>
     <resources>
-        <image name="camera.png" width="76" height="55"/>
+        <image name="camera.png" width="87" height="63"/>
     </resources>
 </document>

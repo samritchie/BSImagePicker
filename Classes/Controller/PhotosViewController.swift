@@ -23,7 +23,7 @@
 import UIKit
 import Photos
 
-final class PhotosViewController : UICollectionViewController, UIPopoverPresentationControllerDelegate, UITableViewDelegate, UINavigationControllerDelegate, SelectableDataDelegate {
+final class PhotosViewController : UICollectionViewController, UIPopoverPresentationControllerDelegate, UITableViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, SelectableDataDelegate {
     var selectionClosure: ((asset: PHAsset) -> Void)?
     var deselectionClosure: ((asset: PHAsset) -> Void)?
     var cancelClosure: ((assets: [PHAsset]) -> Void)?
@@ -260,10 +260,9 @@ final class PhotosViewController : UICollectionViewController, UIPopoverPresenta
     
     override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         if showCameraButton && indexPath.section == 0 && indexPath.item == 0 {
-            let cell = collectionView.dequeueReusableCellWithReuseIdentifier(cameraButtonCellReuseIdentifier, forIndexPath: indexPath)
-            if let btn = cell.subviews[0] as? UIButton {
-                btn.addTarget(self, action: "cameraButtonTapped:", forControlEvents: .TouchUpInside)
-            }
+            let cell = collectionView.dequeueReusableCellWithReuseIdentifier(cameraButtonCellReuseIdentifier, forIndexPath: indexPath) as! CameraButtonCell
+            cell.cameraButton.addTarget(self, action: "cameraButtonTapped:", forControlEvents: .TouchUpInside)
+            return cell
         }
         return photosDataSource!.collectionView(collectionView, cellForItemAtIndexPath: dataSourceIndexForCollectionViewIndex(indexPath))
     }
@@ -476,9 +475,34 @@ final class PhotosViewController : UICollectionViewController, UIPopoverPresenta
         }
     }
     
+    // MARK: UIImagePickerControllerDelegate
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            var placeholder: PHObjectPlaceholder?
+            PHPhotoLibrary.sharedPhotoLibrary().performChanges({
+                let req = PHAssetChangeRequest.creationRequestForAssetFromImage(image)
+                placeholder = req.placeholderForCreatedAsset
+            }, completionHandler: { success, error in
+                if success {
+                    if let placeholder = placeholder,
+                        let asset = PHAsset.fetchAssetsWithLocalIdentifiers([placeholder.localIdentifier], options: nil).firstObject as? PHAsset {
+                            dispatch_async(dispatch_get_main_queue()) {
+                                self.photosDataSource?.data.selections.append(asset)
+                                self.updateDoneButton()
+                            }
+                    }
+                }
+            })
+        }
+        picker.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
     // MARK: IBActions
     @IBAction func cameraButtonTapped(sender: UIButton) {
-        print("Camera Button Tapped")
+        let controller = UIImagePickerController()
+        controller.sourceType = UIImagePickerControllerSourceType.Camera
+        controller.delegate = self
+        self.presentViewController(controller, animated: true, completion: nil)
     }
     
     private func dataSourceIndexForCollectionViewIndex(indexPath: NSIndexPath) -> NSIndexPath {
