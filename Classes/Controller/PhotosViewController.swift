@@ -45,6 +45,8 @@ final class PhotosViewController : UICollectionViewController, UIPopoverPresenta
     private let settings: BSImagePickerSettings
     
     private var doneBarButtonTitle: String?
+    private var showCameraButton = true
+    private let cameraButtonCellReuseIdentifier = "cameraButtonCell"
     
     private lazy var albumsViewController: AlbumsViewController? = {
         let storyboard = UIStoryboard(name: "Albums", bundle: BSImagePickerViewController.bundle)
@@ -118,6 +120,8 @@ final class PhotosViewController : UICollectionViewController, UIPopoverPresenta
         longPressRecognizer.minimumPressDuration = 0.5
         collectionView?.addGestureRecognizer(longPressRecognizer)
         
+        collectionView?.registerNib(UINib(nibName: "CameraButtonCell", bundle: BSImagePickerViewController.bundle), forCellWithReuseIdentifier: cameraButtonCellReuseIdentifier)
+
         // Set navigation controller delegate
         navigationController?.delegate = self
     }
@@ -243,14 +247,36 @@ final class PhotosViewController : UICollectionViewController, UIPopoverPresenta
         albumsViewController?.dismissViewControllerAnimated(true, completion: nil)
     }
     
+    // MARK: UICollectionViewDataSource
+    
+    override func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
+        return photosDataSource?.numberOfSectionsInCollectionView(collectionView) ?? 0
+    }
+    
+    override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if section == 0 { return photosDataSource!.collectionView(collectionView, numberOfItemsInSection: 0) + (showCameraButton ? 1 : 0) }
+        return photosDataSource!.collectionView(collectionView, numberOfItemsInSection: section) ?? 0
+    }
+    
+    override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+        if showCameraButton && indexPath.section == 0 && indexPath.item == 0 {
+            let cell = collectionView.dequeueReusableCellWithReuseIdentifier(cameraButtonCellReuseIdentifier, forIndexPath: indexPath)
+            if let btn = cell.subviews[0] as? UIButton {
+                btn.addTarget(self, action: "cameraButtonTapped:", forControlEvents: .TouchUpInside)
+            }
+        }
+        return photosDataSource!.collectionView(collectionView, cellForItemAtIndexPath: dataSourceIndexForCollectionViewIndex(indexPath))
+    }
+
     // MARK: UICollectionViewDelegate
     override func collectionView(collectionView: UICollectionView, shouldSelectItemAtIndexPath indexPath: NSIndexPath) -> Bool {
+        if indexPath.section == 0 && indexPath.item == 0 { return false }
         return photosDataSource?.data.selections.count < settings.maxNumberOfSelections
     }
     
     override func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         // Select asset)
-        photosDataSource?.data.selectObjectAtIndexPath(indexPath)
+        photosDataSource?.data.selectObjectAtIndexPath(dataSourceIndexForCollectionViewIndex(indexPath))
         
         // Set selection number
         if let cell = collectionView.cellForItemAtIndexPath(indexPath) as? PhotoCell, let count = photosDataSource?.data.selections.count {
@@ -265,7 +291,7 @@ final class PhotosViewController : UICollectionViewController, UIPopoverPresenta
         updateDoneButton()
         
         // Call selection closure
-        if let closure = selectionClosure, let asset = photosDataSource?.data.objectAtIndexPath(indexPath) as? PHAsset {
+        if let closure = selectionClosure, let asset = photosDataSource?.data.objectAtIndexPath(dataSourceIndexForCollectionViewIndex(indexPath)) as? PHAsset {
             dispatch_async(dispatch_get_global_queue(0, 0), { () -> Void in
                 closure(asset: asset)
             })
@@ -274,7 +300,7 @@ final class PhotosViewController : UICollectionViewController, UIPopoverPresenta
     
     override func collectionView(collectionView: UICollectionView, didDeselectItemAtIndexPath indexPath: NSIndexPath) {
         // Deselect asset
-        photosDataSource?.data.deselectObjectAtIndexPath(indexPath)
+        photosDataSource?.data.deselectObjectAtIndexPath(dataSourceIndexForCollectionViewIndex(indexPath))
         
         // Update done button
         updateDoneButton()
@@ -282,13 +308,13 @@ final class PhotosViewController : UICollectionViewController, UIPopoverPresenta
         // Reload selected cells to update their selection number
         if let photosDataSource = photosDataSource {
             UIView.setAnimationsEnabled(false)
-            collectionView.reloadItemsAtIndexPaths(photosDataSource.data.selectedIndexPaths)
+            collectionView.reloadItemsAtIndexPaths(photosDataSource.data.selectedIndexPaths.map(collectionViewIndexForDataSourceIndex))
             syncSelectionInDataSource(photosDataSource.data, withCollectionView: collectionView)
             UIView.setAnimationsEnabled(true)
         }
         
         // Call deselection closure
-        if let closure = deselectionClosure, let asset = photosDataSource?.data.objectAtIndexPath(indexPath) as? PHAsset {
+        if let closure = deselectionClosure, let asset = photosDataSource?.data.objectAtIndexPath(dataSourceIndexForCollectionViewIndex(indexPath)) as? PHAsset {
             dispatch_async(dispatch_get_global_queue(0, 0), { () -> Void in
                 closure(asset: asset)
             })
@@ -304,9 +330,9 @@ final class PhotosViewController : UICollectionViewController, UIPopoverPresenta
                 if let collectionView = self.collectionView {
                     if incrementalChange {
                         // Update
-                        collectionView.deleteItemsAtIndexPaths(delete)
-                        collectionView.insertItemsAtIndexPaths(insert)
-                        collectionView.reloadItemsAtIndexPaths(change)
+                        collectionView.deleteItemsAtIndexPaths(delete.map(self.collectionViewIndexForDataSourceIndex))
+                        collectionView.insertItemsAtIndexPaths(insert.map(self.collectionViewIndexForDataSourceIndex))
+                        collectionView.reloadItemsAtIndexPaths(change.map(self.collectionViewIndexForDataSourceIndex))
                     } else {
                         // Reload & scroll to top if significant change
                         collectionView.reloadData()
@@ -399,7 +425,7 @@ final class PhotosViewController : UICollectionViewController, UIPopoverPresenta
         
         // Loop through them and set them as selected in the collection view
         for indexPath in indexPaths {
-            collectionView.selectItemAtIndexPath(indexPath, animated: false, scrollPosition: .None)
+            collectionView.selectItemAtIndexPath(collectionViewIndexForDataSourceIndex(indexPath), animated: false, scrollPosition: .None)
         }
     }
     
@@ -428,7 +454,7 @@ final class PhotosViewController : UICollectionViewController, UIPopoverPresenta
     
     func synchronizeCollectionView() {
         // Hook up data source
-        collectionView?.dataSource = photosDataSource
+        collectionView?.dataSource = self
         collectionView?.delegate = self
         photosDataSource?.data.delegate = self
         
@@ -449,4 +475,22 @@ final class PhotosViewController : UICollectionViewController, UIPopoverPresenta
             return shrinkAnimator
         }
     }
+    
+    // MARK: IBActions
+    @IBAction func cameraButtonTapped(sender: UIButton) {
+        print("Camera Button Tapped")
+    }
+    
+    private func dataSourceIndexForCollectionViewIndex(indexPath: NSIndexPath) -> NSIndexPath {
+        if showCameraButton && indexPath.section == 0 {
+            return NSIndexPath(forItem: indexPath.item - 1, inSection: 0)
+        } else { return indexPath }
+    }
+    
+    private func collectionViewIndexForDataSourceIndex(indexPath: NSIndexPath) -> NSIndexPath {
+        if showCameraButton && indexPath.section == 0 {
+            return NSIndexPath(forItem: indexPath.item + 1, inSection: 0)
+        } else { return indexPath }
+    }
+
 }

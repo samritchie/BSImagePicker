@@ -54,16 +54,7 @@ final class AlbumTitleView: UIView {
     
     lazy var arrowDownImage: UIImage? = {
         // Get path for BSImagePicker bundle
-        let bundlePath = NSBundle(forClass: PhotosViewController.self).pathForResource("BSImagePicker", ofType: "bundle")
-        let bundle: NSBundle?
-        
-        // Load bundle
-        if let bundlePath = bundlePath {
-            bundle = NSBundle(path: bundlePath)
-        } else {
-            bundle = nil
-        }
-        
+        let bundle = NSBundle(forClass: PhotosViewController.self)
         return UIImage(named: "arrow_down", inBundle: bundle, compatibleWithTraitCollection: nil)
     }()
 }
