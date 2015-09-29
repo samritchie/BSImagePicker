@@ -42,7 +42,7 @@
 		225197D71BB5287E00DB634F /* camera.png in Resources */ = {isa = PBXBuildFile; fileRef = 225197D41BB5287E00DB634F /* camera.png */; settings = {ASSET_TAGS = (); }; };
 		225197D81BB5287E00DB634F /* camera@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 225197D51BB5287E00DB634F /* camera@2x.png */; settings = {ASSET_TAGS = (); }; };
 		225197D91BB5287E00DB634F /* camera@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 225197D61BB5287E00DB634F /* camera@3x.png */; settings = {ASSET_TAGS = (); }; };
-		2257A74B1BBA52C700F17F4C /* CameraButtonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2257A74A1BBA52C700F17F4C /* CameraButtonCell.swift */; settings = {ASSET_TAGS = (); }; };
+		2257A7521BBA73F900F17F4C /* CameraButtonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2257A7511BBA73F900F17F4C /* CameraButtonCell.swift */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -83,7 +83,7 @@
 		225197D41BB5287E00DB634F /* camera.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = camera.png; sourceTree = "<group>"; };
 		225197D51BB5287E00DB634F /* camera@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "camera@2x.png"; sourceTree = "<group>"; };
 		225197D61BB5287E00DB634F /* camera@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "camera@3x.png"; sourceTree = "<group>"; };
-		2257A74A1BBA52C700F17F4C /* CameraButtonCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CameraButtonCell.swift; path = ../../../../Desktop/TestApp/TestApp/CameraButtonCell.swift; sourceTree = "<group>"; };
+		2257A7511BBA73F900F17F4C /* CameraButtonCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraButtonCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -202,11 +202,11 @@
 		220A4A8C1BB1070F004D1FDA /* View */ = {
 			isa = PBXGroup;
 			children = (
+				2257A7511BBA73F900F17F4C /* CameraButtonCell.swift */,
 				220A4A8D1BB1070F004D1FDA /* AlbumCell.swift */,
 				220A4A8E1BB1070F004D1FDA /* AlbumTitleView.swift */,
 				220A4A8F1BB1070F004D1FDA /* PhotoCell.swift */,
 				220A4A901BB1070F004D1FDA /* SelectionView.swift */,
-				2257A74A1BBA52C700F17F4C /* CameraButtonCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -340,7 +340,7 @@
 				220A4AA21BB1070F004D1FDA /* AlbumCellFactory.swift in Sources */,
 				220A4A9C1BB1070F004D1FDA /* BSImagePickerViewController.swift in Sources */,
 				220A4AAA1BB1070F004D1FDA /* CollectionViewCellFactory.swift in Sources */,
-				2257A74B1BBA52C700F17F4C /* CameraButtonCell.swift in Sources */,
+				2257A7521BBA73F900F17F4C /* CameraButtonCell.swift in Sources */,
 				220A4AA41BB1070F004D1FDA /* AssetCollectionDataSource.swift in Sources */,
 				220A4AAB1BB1070F004D1FDA /* SelectableDataDelegate.swift in Sources */,
 				220A4AB31BB1070F004D1FDA /* UIImageViewModeScaleAspect.m in Sources */,
